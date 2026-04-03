@@ -1,0 +1,43 @@
+version: '3.8'
+
+networks:
+  lootradar:
+    name: lootradar
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lootradar-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lootradar
+      POSTGRES_PASSWORD: lootradar
+      POSTGRES_DB: lootradar
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - lootradar
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U lootradar -d lootradar']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: lootradar-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://lootradar:lootradar@postgres:5432/lootradar
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    networks:
+      - lootradar

@@ -1,22 +1,30 @@
-# Imagem oficial Node.js 24 (Alpine)
-FROM node:24-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar ficheiros de dependências
-COPY package.json package-lock.json* ./
+COPY shared/package*.json ./shared/
+COPY backend/package*.json ./backend/
+RUN cd backend && npm ci
 
-# Instalar dependências (inclui devDependencies para dev)
-RUN npm install
+COPY shared ./shared
+COPY backend ./backend
 
-# Copiar o resto da aplicação
-COPY . .
+RUN cd backend && npx prisma generate
+RUN cd backend && npm run build
 
-# Gerar cliente Prisma
-RUN npx prisma generate
+FROM node:20-alpine AS runner
 
-# Porta do servidor
+WORKDIR /app
+
+COPY backend/package*.json ./backend/
+RUN cd backend && npm ci --omit=dev
+
+COPY --from=builder /app/backend/dist ./backend/dist
+COPY --from=builder /app/backend/node_modules/.prisma ./backend/node_modules/.prisma
+COPY backend/prisma ./backend/prisma
+
+WORKDIR /app/backend
+
 EXPOSE 3000
 
-# Gerar Prisma e iniciar servidor em modo desenvolvimento
-CMD ["sh", "-c", "npx prisma generate && npm run dev"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
