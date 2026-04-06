@@ -13,7 +13,6 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "paths": {
-      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],

@@ -16,13 +16,13 @@ export class UserApiController {
     return this.userApiService.create(user);
   }
 
-  @Get()
-  findAll() {
-    return this.userApiService.findAll();
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userApiService.findOne(id);
+  }
+
+  @Get()
+  findAll() {
+    return this.userApiService.findAll();
   }
 }

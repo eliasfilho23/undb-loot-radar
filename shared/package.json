@@ -7,51 +7,36 @@
   "module": "./dist/esm/index.js",
   "exports": {
     ".": {
-      "import" : "./dist/esm/index.js",
+      "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
-      "types"  : "./dist/types/index.d.ts"
-    },
-    "./constants": {
-      "import" : "./dist/esm/constants/index.js",
-      "require": "./dist/cjs/constants/index.js",
-      "types"  : "./dist/types/constants/index.d.ts"
-    },
-    "./helpers": {
-      "import" : "./dist/esm/helpers/index.js",
-      "require": "./dist/cjs/helpers/index.js",
-      "types"  : "./dist/types/helpers/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     },
     "./schemas": {
-      "import" : "./dist/esm/schemas/index.js",
+      "import": "./dist/esm/schemas/index.js",
       "require": "./dist/cjs/schemas/index.js",
-      "types"  : "./dist/types/schemas/index.d.ts"
-    },
-    "./validation": {
-      "import" : "./dist/esm/validation/index.js",
-      "require": "./dist/cjs/validation/index.js",
-      "types"  : "./dist/types/validation/index.d.ts"
-    },
-    "./zod": {
-      "import" : "./dist/esm/zod/index.js",
-      "require": "./dist/cjs/zod/index.js",
-      "types"  : "./dist/types/zod/index.d.ts"
+      "types": "./dist/types/schemas/index.d.ts"
     }
   },
   "types": "./dist/types/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build"      : "npm run build:clean && npm run build:cjs && npm run build:esm && npm run build:types",
+    "build": "npm run build:clean && npm run build:cjs && npm run build:esm && npm run build:types",
     "build:clean": "rm -rf dist",
-    "build:cjs"  : "tsc -p tsconfig.cjs.json",
-    "build:esm"  : "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "build:types": "tsc -p tsconfig.types.json",
-    "watch"      : "nodemon --watch src --ext ts --exec npm run build"
+    "watch": "nodemon --watch src --ext ts --exec npm run build"
   },
   "peerDependencies": {
-    "zod": "^3.22.4"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
-    "zod"       : "^3.22.4"
+    "zod": "^4.1.12"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
   }
 }

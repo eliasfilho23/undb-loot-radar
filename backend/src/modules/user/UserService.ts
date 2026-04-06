@@ -1,34 +1,27 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '@/prisma';
+import { UserRepository } from '@/repository';
 import { User } from '@/schemas';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async create(dto: User) {
-    const existing = await this.prisma.user.findFirst({
-      where: { OR: [{ email: dto.email }, { username: dto.username }] },
-    });
+    const existing = await this.userRepository.findByEmailOrUsername(dto.email, dto.username);
 
     if (existing) {
       throw new ConflictException('Username or email already in use');
     }
 
-    return this.prisma.user.create({ data: dto });
+    return this.userRepository.create(dto);
   }
 
   async findAll() {
-    return this.prisma.user.findMany({
-      select: { id: true, username: true, email: true, createdAt: true },
-    });
+    return this.userRepository.findAll();
   }
 
   async findOne(id: string) {
-    const user = await this.prisma.user.findUnique({
-      where : { id },
-      select: { id: true, username: true, email: true, createdAt: true },
-    });
+    const user = await this.userRepository.findById(id);
 
     if (!user) {
       throw new NotFoundException(`User ${id} not found`);

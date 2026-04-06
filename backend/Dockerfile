@@ -4,12 +4,14 @@ WORKDIR /app
 
 COPY shared/package*.json ./shared/
 COPY backend/package*.json ./backend/
-RUN cd backend && npm ci
+
+RUN cd shared && npm ci --silent
+RUN cd backend && npm ci --silent
 
 COPY shared ./shared
 COPY backend ./backend
 
-RUN cd backend && npx prisma generate
+RUN cd shared && npm run build
 RUN cd backend && npm run build
 
 FROM node:20-alpine AS runner
@@ -17,14 +19,13 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 
 COPY backend/package*.json ./backend/
-RUN cd backend && npm ci --omit=dev
+RUN cd backend && npm ci --omit=dev --silent
 
-COPY --from=builder /app/backend/dist ./backend/dist
-COPY --from=builder /app/backend/node_modules/.prisma ./backend/node_modules/.prisma
-COPY backend/prisma ./backend/prisma
+COPY --from=builder /app/backend/dist   ./backend/dist
+COPY backend/drizzle                    ./backend/drizzle
 
 WORKDIR /app/backend
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "npm run drizzle:migrate && node dist/main.js"]
