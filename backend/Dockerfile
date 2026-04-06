@@ -1,22 +1,31 @@
-# Imagem oficial Node.js 24 (Alpine)
-FROM node:24-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar ficheiros de dependências
-COPY package.json package-lock.json* ./
+COPY shared/package*.json ./shared/
+COPY backend/package*.json ./backend/
 
-# Instalar dependências (inclui devDependencies para dev)
-RUN npm install
+RUN cd shared && npm ci --silent
+RUN cd backend && npm ci --silent
 
-# Copiar o resto da aplicação
-COPY . .
+COPY shared ./shared
+COPY backend ./backend
 
-# Gerar cliente Prisma
-RUN npx prisma generate
+RUN cd shared && npm run build
+RUN cd backend && npm run build
 
-# Porta do servidor
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+COPY backend/package*.json ./backend/
+RUN cd backend && npm ci --omit=dev --silent
+
+COPY --from=builder /app/backend/dist   ./backend/dist
+COPY backend/drizzle                    ./backend/drizzle
+
+WORKDIR /app/backend
+
 EXPOSE 3000
 
-# Gerar Prisma e iniciar servidor em modo desenvolvimento
-CMD ["sh", "-c", "npx prisma generate && npm run dev"]
+CMD ["sh", "-c", "npm run drizzle:migrate && node dist/main.js"]

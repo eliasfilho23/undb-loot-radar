@@ -1,0 +1,42 @@
+{
+  "name": "@lootradar/shared",
+  "version": "0.1.0",
+  "description": "LootRadar shared schemas and types",
+  "license": "UNLICENSED",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./schemas": {
+      "import": "./dist/esm/schemas/index.js",
+      "require": "./dist/cjs/schemas/index.js",
+      "types": "./dist/types/schemas/index.d.ts"
+    }
+  },
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run build:clean && npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:clean": "rm -rf dist",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "watch": "nodemon --watch src --ext ts --exec npm run build"
+  },
+  "peerDependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "zod": "^4.1.12"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
