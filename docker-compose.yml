@@ -30,7 +30,11 @@ services:
     profiles: [tools]
     working_dir: /app/backend
     environment:
-      DATABASE_URL: postgresql://lootradar:lootradar@postgres:5433/lootradar
+      DB_HOST: postgres
+      DB_PORT: "5433"
+      DB_NAME: lootradar
+      DB_USER: lootradar
+      DB_PASSWORD: lootradar
     volumes:
       - ./shared:/app/shared
       - ./backend:/app/backend

@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "LootRadar Backend API",
   "scripts": {
-    "build"           : "nest build",
-    "start:dev"       : "nest start --watch",
-    "start:debug"     : "nest start --debug --watch",
+    "build": "nest build",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
     "drizzle:generate": "drizzle-kit generate",
-    "drizzle:migrate" : "drizzle-kit migrate"
+    "drizzle:migrate": "drizzle-kit migrate",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint:check": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings 0"
   },
   "dependencies": {
     "@lootradar/shared": "file:../shared",
@@ -21,13 +24,18 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@nestjs/cli"        : "^10.3.0",
-    "@nestjs/schematics" : "^10.1.1",
-    "@types/express"     : "^4.17.21",
-    "@types/node"        : "^20.11.20",
-    "drizzle-kit"        : "^0.31.10",
-    "ts-node"            : "^10.9.2",
-    "tsconfig-paths"     : "^4.2.0",
-    "typescript"         : "^5.3.3"
+    "@eslint/js": "^9.39.4",
+    "@nestjs/cli": "^10.3.0",
+    "@nestjs/schematics": "^10.1.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.20",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9.39.4",
+    "globals": "^16.5.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.58.1"
   }
 }
