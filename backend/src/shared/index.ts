@@ -1,1 +1,1 @@
-export * from '@lootradar/shared'
+export * from '@lootradar/shared';

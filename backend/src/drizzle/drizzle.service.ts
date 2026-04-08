@@ -9,7 +9,13 @@ export class DrizzleService implements OnModuleDestroy {
   public readonly db: NodePgDatabase<typeof schema>;
 
   constructor() {
-    this.pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    this.pool = new Pool({
+      host    : process.env.DB_HOST,
+      port    : parseInt(process.env.DB_PORT || '5433', 10),
+      user    : process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+    });
     this.db   = drizzle(this.pool, { schema });
   }
 

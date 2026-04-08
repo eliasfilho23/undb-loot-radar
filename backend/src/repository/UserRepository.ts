@@ -14,7 +14,7 @@ export class UserRepository {
   }
 
   async create(dto: User): Promise<UserTable> {
-    const [user] = await this.db
+    const [ user ] = await this.db
       .insert(userTable)
       .values({ id: randomUUID(), username: dto.username, email: dto.email })
       .returning();
