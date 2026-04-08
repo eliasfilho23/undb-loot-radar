@@ -13,10 +13,10 @@ export class UserRepository {
     this.db = drizzle.db;
   }
 
-  async create(dto: User): Promise<UserTable> {
+  async create(userToBeCreated: User): Promise<UserTable> {
     const [ user ] = await this.db
       .insert(userTable)
-      .values({ id: randomUUID(), username: dto.username, email: dto.email })
+      .values({ id: randomUUID(), username: userToBeCreated.username, email: userToBeCreated.email })
       .returning();
     return user;
   }

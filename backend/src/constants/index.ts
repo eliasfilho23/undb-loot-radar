@@ -1,5 +1,7 @@
+export * from '@lootradar/shared';
+
 export const ErrorCode = {
   BadRequest: {
-    Validation: 'BAD_REQUEST.VALIDATION',
+    Validation: 'bad-request.validation',
   },
-};
+} as const;

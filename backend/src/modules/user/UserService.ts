@@ -8,11 +8,9 @@ export class UserService {
 
   async create(dto: User) {
     const existing = await this.userRepository.findByEmailOrUsername(dto.email, dto.username);
-
     if (existing) {
       throw new ConflictException('Username or email already in use');
     }
-
     return this.userRepository.create(dto);
   }
 
@@ -22,11 +20,9 @@ export class UserService {
 
   async findOne(id: string) {
     const user = await this.userRepository.findById(id);
-
     if (!user) {
       throw new NotFoundException(`User ${id} not found`);
     }
-
     return user;
   }
 }
