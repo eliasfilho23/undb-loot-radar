@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #111827;
+  --color-card: #1f2937;
+  --color-accent: #3b82f6;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: #f3f4f6;
+  -webkit-font-smoothing: antialiased;
+}
