@@ -1,6 +1,5 @@
-import { Outlet } from 'react-router'
-import { Link } from 'react-router'
-import { RouteUri } from '@/constants/RouteUri'
+import { Outlet, Link } from 'react-router';
+import { RouteUri } from '@/constants/RouteUri';
 
 export function AppLayout() {
   return (
@@ -14,6 +13,12 @@ export function AppLayout() {
             LootRadar
           </Link>
           <nav className="flex items-center gap-3 sm:gap-6">
+            <Link
+              to={RouteUri.Claims}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Meus resgates
+            </Link>
             <Link
               to={RouteUri.Auth.Login}
               className="text-sm text-gray-400 hover:text-white transition-colors"
@@ -33,5 +38,5 @@ export function AppLayout() {
         <Outlet />
       </main>
     </div>
-  )
+  );
 }

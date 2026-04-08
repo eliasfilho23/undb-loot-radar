@@ -1,1 +1,1 @@
-export { default as MyClaimsPage } from './MyClaimsPage'
+export { default as MyClaimsPage } from './MyClaimsPage';

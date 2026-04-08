@@ -1,14 +1,14 @@
-import { Suspense } from 'react'
-import { Routes, Route, Navigate } from 'react-router'
-import { routes } from './routes'
-import { AppLayout } from '@/layouts/app'
+import { Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router';
+import { routes } from './routes';
+import { AppLayout } from '@/layouts/app';
 
 function PageLoader() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center">
       <span className="text-gray-400 text-sm">Carregando...</span>
     </div>
-  )
+  );
 }
 
 export function Router() {
@@ -23,5 +23,5 @@ export function Router() {
         </Route>
       </Routes>
     </Suspense>
-  )
+  );
 }

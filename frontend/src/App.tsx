@@ -1,5 +1,5 @@
-import { Toaster } from 'sonner'
-import { Router } from './routes/Router'
+import { Toaster } from 'sonner';
+import { Router } from './routes/Router';
 
 export default function App() {
   return (
@@ -7,5 +7,5 @@ export default function App() {
       <Router />
       <Toaster theme="dark" />
     </>
-  )
+  );
 }

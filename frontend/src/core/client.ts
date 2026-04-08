@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? ''
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -7,12 +7,12 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
       ...options.headers,
     },
     ...options,
-  })
+  });
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({})) as { error?: string }
-    throw new Error(data.error ?? `Erro ${response.status}`)
+    const data = await response.json().catch(() => ({})) as { error?: string };
+    throw new Error(data.error ?? `Erro ${response.status}`);
   }
 
-  return response.json() as Promise<T>
+  return response.json() as Promise<T>;
 }
