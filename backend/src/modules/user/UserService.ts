@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '@/repository';
 import { User } from '@/schemas';
 
@@ -7,15 +7,7 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async create(dto: User) {
-    const existing = await this.userRepository.findByEmailOrUsername(dto.email, dto.username);
-    if (existing) {
-      throw new ConflictException('Username or email already in use');
-    }
     return this.userRepository.create(dto);
-  }
-
-  async findAll() {
-    return this.userRepository.findAll();
   }
 
   async findOne(id: string) {
