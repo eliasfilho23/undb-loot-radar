@@ -1,9 +1,9 @@
-import { Body } from '@nestjs/common';
+import { Body, Param } from '@nestjs/common';
 import { UserApiService } from './UserApiService';
 import { ZodParser } from '@/zod';
-import { Command } from '@/constants';
+import { Api } from '@/constants';
 import { User, UserDocs } from '@/schemas';
-import { CommandGet, CommandPost, Controller, OpenApi } from '@/decorators';
+import { ApiGet, ApiPost, Controller, OpenApi } from '@/decorators';
 
 @Controller('users')
 export class UserApiController {
@@ -12,22 +12,17 @@ export class UserApiController {
     private readonly zodParser     : ZodParser,
   ) {}
 
-  @CommandPost(Command.User.Create)
+  @ApiPost(Api.User.Create)
   @OpenApi(UserDocs.create)
   async create(@Body() body: unknown) {
     const user = this.zodParser.parseOrBadRequest(User, body);
     return this.userApiService.create(user);
   }
 
-  @CommandGet(Command.User.Read)
+  @ApiGet(Api.User.Read)
   @OpenApi(UserDocs.findOne)
-  findOne(@Body() body: { id: string }) {
-    return this.userApiService.findOne(body.id);
-  }
-
-  @CommandGet(Command.User.List)
-  @OpenApi(UserDocs.findAll)
-  findAll() {
-    return this.userApiService.findAll();
+  findOne(@Param() params: string[]) {
+    const id = params[0].split('=')[1];
+    return this.userApiService.findOne(id);
   }
 }

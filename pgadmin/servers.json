@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "lootradar",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5433,
+      "MaintenanceDB": "lootradar-dev",
+      "Username": "lootradar_user_dev",
+      "SSLMode": "prefer"
+    }
+  }
+}

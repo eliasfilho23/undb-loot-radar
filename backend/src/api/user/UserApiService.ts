@@ -10,10 +10,6 @@ export class UserApiService {
     return this.userService.create(data);
   }
 
-  async findAll() {
-    return this.userService.findAll();
-  }
-
   async findOne(id: string) {
     return this.userService.findOne(id);
   }

@@ -5,22 +5,13 @@
     "target"                : "ES2023",
     "esModuleInterop"       : true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata" : true,
     "skipLibCheck"          : true,
     "strict"                : true,
     "noImplicitAny"         : false,
-    "baseUrl"               : "./",
-    "paths": {
-      "@/shared/*"                : ["../shared/src/*"],
-      "@/shared"                  : ["../shared/src/index.ts"],
-      "@lootradar/shared/schemas" : ["../shared/src/schemas/index.ts"],
-      "@lootradar/shared"         : ["../shared/src/index.ts"],
-      "@/*"                       : ["../backend/src/*"],
-      "*"                         : ["node_modules/*", "../backend/node_modules/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "../backend/node_modules/@types"],
-    "types"    : ["jest", "node"]
+    "baseUrl"               : "./"
   },
-  "include": ["./**/*.ts", "../backend/src/**/*.ts", "../shared/src/**/*.ts"]
+  "include": ["./**/*.ts"],
+  "paths": {
+    "@/*": ["./src/*"]
+  }
 }

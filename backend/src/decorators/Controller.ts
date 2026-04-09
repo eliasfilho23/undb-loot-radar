@@ -4,6 +4,6 @@ import { ApiTags } from '@nestjs/swagger';
 export function Controller(label: string) {
   return applyDecorators(
     ApiTags(label),
-    NestController(label),
+    NestController(),
   );
 }
