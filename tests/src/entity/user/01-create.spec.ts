@@ -1,44 +1,66 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-
-const BASE = '/users';
+import { Api, UserDocs } from '@lootradar/shared';
+import { client } from 'src/client';
+import { userFactory } from 'src/factory';
 
 const payload = {
-  username: faker.internet.username().slice(0, 20),
+  username: faker.internet.userName().slice(0, 20),
   email: faker.internet.email(),
 };
 
-test.describe('User - Create & Find', () => {
+test.describe(UserDocs.create.operation.summary, () => {
   test.describe.configure({ mode: 'serial' });
 
-  let createdId: string;
-
-  test('POST /users — cria um user', async ({ request }) => {
-    const response = await request.post(BASE, { data: payload });
-    expect(response.status()).toBe(201);
-    const body = await response.json();
+  test(`Criar Usuário - ${UserDocs.create.operation.summary}`, async () => {
+    const { error, response } = await client.safeCommand<{ id: string; username: string; email: string }, typeof payload>({
+      command: Api.User.Create,
+      body: payload,
+      method: 'POST',
+    });
+    expect(error).toBeUndefined();
+    expect(response?.status).toBe(201);
+    const body = response!.body;
     expect(body.id).toBeDefined();
     expect(body.username).toBe(payload.username);
     expect(body.email).toBe(payload.email);
-    createdId = body.id;
   });
 
-  test('POST /users — retorna 409 ao criar user duplicado', async ({ request }) => {
-    const response = await request.post(BASE, { data: payload });
-    expect(response.status()).toBe(409);
+  test(`Criar Usuário - ${UserDocs.create.operation.summary} - retorna 409 ao criar user duplicado`, async () => {
+    const { payload: createdPayload } = await userFactory.createUser();
+    const { error, response } = await client.safeCommand({
+      command: Api.User.Create,
+      body: createdPayload,
+      method: 'POST',
+    });
+    expect(response).toBeUndefined();
+    expect(error?.status).toBe(409);
   });
 
-  test('GET /users/:id — retorna o user criado', async ({ request }) => {
-    const response = await request.get(`${BASE}/${createdId}`);
-    expect(response.status()).toBe(200);
-    const body = await response.json();
-    expect(body.id).toBe(createdId);
-    expect(body.username).toBe(payload.username);
-    expect(body.email).toBe(payload.email);
+  test(`Buscar Usuário - ${UserDocs.findOne.operation.summary} - retorna o user criado`, async () => {
+    const { user, payload: createdPayload } = await userFactory.createUser();
+    const { error, response } = await client.safeCommand<{ id: string; username: string; email: string }, { id: string }>({
+      command: Api.User.Read,
+      body: { id: user.id },
+      method: 'GET',
+    });
+    expect(error).toBeUndefined();
+    expect(response?.status).toBe(200);
+    const body = response!.body;
+    expect(body.id).toBe(user.id);
+    expect(body.username).toBe(createdPayload.username);
+    expect(body.email).toBe(createdPayload.email);
   });
-
-  test('GET /users/:id — retorna 404 para id inexistente', async ({ request }) => {
-    const response = await request.get(`${BASE}/non-existent-id`);
-    expect(response.status()).toBe(404);
+  
+  test(`Buscar Usuário Inexistente - 
+    ${UserDocs.findOne.operation.summary} - 
+    ${UserDocs.findOne.responses[0].description}`, async () => {
+    const { error, response } = await client.safeCommand({
+      command: Api.User.Read,
+      body: { id: 'non-existent-id' },
+      method: 'GET',
+    });
+    expect(response).toBeUndefined();
+    expect(error?.status).toBe(404);
   });
 });

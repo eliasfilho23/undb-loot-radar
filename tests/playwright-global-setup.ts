@@ -2,27 +2,18 @@ import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-import { Test } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
-import { DrizzleService } from '@/drizzle';
-import { claimTable, userTable } from '@/drizzle/tables';
-import { setApp } from './app-instance';
+import { Pool } from 'pg';
 
 export default async function globalSetup() {
-  const module = await Test.createTestingModule({
-    imports: [AppModule],
-  }).compile();
+  const pool = new Pool({
+    host    : process.env.DB_HOST,
+    port    : parseInt(process.env.DB_PORT ?? '5433', 10),
+    user    : process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  });
 
-  const app = module.createNestApplication();
-  await app.listen(0); // bind to a random available port
-
-  const url = await app.getUrl();
-  process.env.TEST_BASE_URL = url;
-
-  setApp(app);
-
-  // Truncate tables before test run (previously in 00-backend.spec.ts)
-  const drizzle = app.get(DrizzleService);
-  await drizzle.db.delete(claimTable);
-  await drizzle.db.delete(userTable);
+  await pool.query('DELETE FROM claims');
+  await pool.query('DELETE FROM users');
+  await pool.end();
 }
