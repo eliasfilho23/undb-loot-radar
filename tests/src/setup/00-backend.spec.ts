@@ -1,17 +1,8 @@
-import request from 'supertest';
-import { DrizzleService } from '@/drizzle';
-import { userTable, claimTable } from '@/drizzle/tables';
+import { test, expect } from '@playwright/test';
 
-describe('Setup - Backend', () => {
-  it('health check', async () => {
-    const { status, body } = await request(testApp.getHttpServer()).get('/health');
-    expect(status).toBe(200);
-    expect(body.status).toBe('ok');
-  });
-
-  it('truncate tables', async () => {
-    const drizzle = testApp.get(DrizzleService);
-    await drizzle.db.delete(claimTable);
-    await drizzle.db.delete(userTable);
-  });
+test('health check', async ({ request }) => {
+  const response = await request.get('/health');
+  expect(response.status()).toBe(200);
+  const body = await response.json();
+  expect(body.status).toBe('ok');
 });

@@ -1,51 +1,44 @@
-import request from 'supertest';
+import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
 const BASE = '/users';
 
 const payload = {
-  username: faker.internet.userName().slice(0, 20),
-  email   : faker.internet.email(),
+  username: faker.internet.username().slice(0, 20),
+  email: faker.internet.email(),
 };
 
-describe('User - Create & Find', () => {
+test.describe('User - Create & Find', () => {
+  test.describe.configure({ mode: 'serial' });
+
   let createdId: string;
 
-  it('POST /users — cria um user', async () => {
-    const { status, body } = await request(testApp.getHttpServer())
-      .post(BASE)
-      .send(payload);
-
-    expect(status).toBe(201);
+  test('POST /users — cria um user', async ({ request }) => {
+    const response = await request.post(BASE, { data: payload });
+    expect(response.status()).toBe(201);
+    const body = await response.json();
     expect(body.id).toBeDefined();
     expect(body.username).toBe(payload.username);
     expect(body.email).toBe(payload.email);
-
     createdId = body.id;
   });
 
-  it('POST /users — retorna 409 ao criar user duplicado', async () => {
-    const { status } = await request(testApp.getHttpServer())
-      .post(BASE)
-      .send(payload);
-
-    expect(status).toBe(409);
+  test('POST /users — retorna 409 ao criar user duplicado', async ({ request }) => {
+    const response = await request.post(BASE, { data: payload });
+    expect(response.status()).toBe(409);
   });
 
-  it('GET /users/:id — retorna o user criado', async () => {
-    const { status, body } = await request(testApp.getHttpServer())
-      .get(`${BASE}/${createdId}`);
-
-    expect(status).toBe(200);
+  test('GET /users/:id — retorna o user criado', async ({ request }) => {
+    const response = await request.get(`${BASE}/${createdId}`);
+    expect(response.status()).toBe(200);
+    const body = await response.json();
     expect(body.id).toBe(createdId);
     expect(body.username).toBe(payload.username);
     expect(body.email).toBe(payload.email);
   });
 
-  it('GET /users/:id — retorna 404 para id inexistente', async () => {
-    const { status } = await request(testApp.getHttpServer())
-      .get(`${BASE}/non-existent-id`);
-
-    expect(status).toBe(404);
+  test('GET /users/:id — retorna 404 para id inexistente', async ({ request }) => {
+    const response = await request.get(`${BASE}/non-existent-id`);
+    expect(response.status()).toBe(404);
   });
 });
