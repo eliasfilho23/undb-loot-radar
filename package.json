@@ -1,0 +1,15 @@
+{
+  "name": "lootradar",
+  "version": "0.1.0",
+  "scripts": {
+    "lint:backend": "npm run --prefix backend lint:check",
+    "lint:backend:fix": "npm run --prefix backend lint:fix",
+    "lint:frontend": "npm run --prefix frontend lint:check",
+    "lint:frontend:fix": "npm run --prefix frontend lint:fix",
+    "lint:shared": "npm run --prefix shared lint:check",
+    "lint:shared:fix": "npm run --prefix shared lint:fix",
+    "lint:all": "npm run lint:backend && npm run lint:frontend && npm run lint:shared",
+    "lint:all:fix": "npm run lint:backend:fix && npm run lint:frontend:fix && npm run lint:shared:fix",
+    "lint:main:fix": "(cd backend && npx eslint src/main.ts --fix)"
+  }
+}
