@@ -8,9 +8,9 @@ services:
     container_name: lootradar-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: lootradar
-      POSTGRES_PASSWORD: lootradar
-      POSTGRES_DB: lootradar
+      POSTGRES_USER: lootradar_user_dev
+      POSTGRES_PASSWORD: sql123
+      POSTGRES_DB: lootradar-dev
       PGPORT: 5433
     ports:
       - '5433:5433'
@@ -19,7 +19,7 @@ services:
     networks:
       - lootradar
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U lootradar -d lootradar -p 5433']
+      test: ['CMD-SHELL', 'pg_isready -U lootradar_user_dev -d lootradar-dev -p 5433']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,9 +32,9 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: "5433"
-      DB_NAME: lootradar
-      DB_USER: lootradar
-      DB_PASSWORD: lootradar
+      DB_NAME: lootradar-dev
+      DB_USER: lootradar_user_dev
+      DB_PASSWORD: sql123
     volumes:
       - ./shared:/app/shared
       - ./backend:/app/backend
@@ -48,6 +48,25 @@ services:
       - lootradar
     restart: 'no'
 
+  pgadmin:
+    image: dpage/pgadmin4:9.12
+    container_name: lootradar-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lootradar.dev
+      PGADMIN_DEFAULT_PASSWORD: lootradar
+    ports:
+      - '5050:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+    networks:
+      - lootradar
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   pgdata:
   backend_nm:
+  pgadmin_data:

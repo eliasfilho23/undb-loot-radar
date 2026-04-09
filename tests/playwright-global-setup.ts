@@ -13,7 +13,5 @@ export default async function globalSetup() {
     database: process.env.DB_NAME,
   });
 
-  await pool.query('DELETE FROM claims');
-  await pool.query('DELETE FROM users');
   await pool.end();
 }

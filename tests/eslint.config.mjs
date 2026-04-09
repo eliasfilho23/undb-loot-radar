@@ -22,7 +22,6 @@ export default tseslint.config(
       },
     },
     rules: {
-      // TypeScript — desativadas (alinhado com zivmed)
       '@typescript-eslint/interface-name-prefix'        : 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -43,7 +42,6 @@ export default tseslint.config(
       'no-trailing-spaces'      : 'error',
       'no-multiple-empty-lines' : ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
       'eol-last'                : ['error', 'always'],
-      // no-console não é erro em tests (alinhado com preset react do zivmed)
 
       // Indentação via @stylistic (desativa a nativa)
       'indent'            : 'off',
