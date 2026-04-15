@@ -24,30 +24,6 @@ services:
       timeout: 5s
       retries: 5
 
-  migrate:
-    image: node:20-alpine
-    container_name: lootradar-migrate
-    profiles: [tools]
-    working_dir: /app/backend
-    environment:
-      DB_HOST: postgres
-      DB_PORT: "5433"
-      DB_NAME: lootradar-dev
-      DB_USER: lootradar_user_dev
-      DB_PASSWORD: sql123
-    volumes:
-      - ./shared:/app/shared
-      - ./backend:/app/backend
-      - backend_nm:/app/backend/node_modules
-    command: >
-      sh -c "npm ci --silent && npm run drizzle:migrate"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - lootradar
-    restart: 'no'
-
   pgadmin:
     image: dpage/pgadmin4:9.12
     container_name: lootradar-pgadmin
