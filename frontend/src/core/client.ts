@@ -1,3 +1,5 @@
+import { Cookies } from '@/utils/cookies';
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export class ApiError {
@@ -14,27 +16,21 @@ export class ApiError {
     }
     return this.body?.message ?? `Erro ${this.status}`;
   }
+
+  get errorCode(): string | undefined {
+    return this.body?.errorCode;
+  }
 }
 
 type SafeResult<T> =
   | { error: ApiError;    response: undefined }
   | { error: undefined;   response: { status: number; body: T } }
 
-export async function safeRequest<T>(
-  path   : string,
-  options: RequestInit = {},
-): Promise<SafeResult<T>> {
+async function fetchJson<T>(path: string, options: RequestInit): Promise<SafeResult<T>> {
   try {
-    const response = await fetch(`${API_BASE}${path}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    });
-
-    const text = await response.text();
-    const body = text ? JSON.parse(text) : undefined;
+    const response = await fetch(`${API_BASE}${path}`, options);
+    const text     = await response.text();
+    const body     = text ? JSON.parse(text) : undefined;
 
     if (!response.ok) {
       return { error: new ApiError(response.status, body), response: undefined };
@@ -49,9 +45,64 @@ export async function safeRequest<T>(
   }
 }
 
+export async function safeRequest<T>(
+  path   : string,
+  options: RequestInit = {},
+): Promise<SafeResult<T>> {
+  return fetchJson<T>(path, {
+    credentials: 'include',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+}
+
+export async function authedSafeRequest<T>(
+  path   : string,
+  options: RequestInit = {},
+): Promise<SafeResult<T>> {
+  const token = Cookies.getAccessToken();
+
+  const result = await fetchJson<T>(path, {
+    credentials: 'include',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (result.error?.status !== 401) return result;
+
+  // Token expirado — tenta refresh
+  const refreshResult = await fetchJson<unknown>('/api/auth/refresh-cookie', {
+    method     : 'POST',
+    credentials: 'include',
+    headers    : { 'Content-Type': 'application/json' },
+  });
+
+  if (refreshResult.error) return result;
+
+  // Repete a requisição original com o novo token
+  const newToken = Cookies.getAccessToken();
+  return fetchJson<T>(path, {
+    credentials: 'include',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+      ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
+    },
+  });
+}
+
 export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
+    credentials: 'include',
+    headers    : {
       'Content-Type': 'application/json',
       ...options.headers,
     },

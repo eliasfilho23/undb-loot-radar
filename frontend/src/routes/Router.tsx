@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
-import { routes } from './routes';
+import { routes, privateRoutes } from './routes';
 import { AppLayout } from '@/layouts/app';
+import { SessionGuard } from '@/features/auth/SessionGuard';
 
 function PageLoader() {
   return (
@@ -19,6 +20,13 @@ export function Router() {
           {routes.map(({ key, path, component: Component }) => (
             <Route key={key} path={path} element={<Component />} />
           ))}
+
+          <Route element={<SessionGuard />}>
+            {privateRoutes.map(({ key, path, component: Component }) => (
+              <Route key={key} path={path} element={<Component />} />
+            ))}
+          </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
