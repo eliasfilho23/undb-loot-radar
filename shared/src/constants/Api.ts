@@ -4,4 +4,10 @@ export const Api = {
     Read  : 'lootradar.user.read',
     List  : 'lootradar.user.list',
   },
+  Auth: {
+    ClientLogin  : 'auth/client-login',
+    Me           : 'auth/me',
+    RefreshCookie: 'auth/refresh-cookie',
+    ClientLogout : 'auth/client-logout',
+  },
 }
