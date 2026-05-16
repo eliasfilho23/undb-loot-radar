@@ -1,5 +1,6 @@
 # LootRadar (workspace)
-#Estive aqui. Professor Rondineli
+#Professor esteve aqui.
+
 Monorepo da aplicação **LootRadar**: API em NestJS, frontend em Vite/React, pacote **shared** (schemas Zod, constantes) e **tests** (Playwright, API). O Postgres pode ser iniciado com Docker na pasta `lootradar/`.
 
 No mesmo workspace existem outros projetos de referência (`zivmed/`, `LootRadar - Original/`); os passos abaixo referem-se apenas a **`lootradar/`**.

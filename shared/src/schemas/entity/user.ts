@@ -1,18 +1,24 @@
 import z from 'zod';
 
 export const User = z.object({
+  id      : z.uuid(),
   username: z.string().min(3).max(50),
   email   : z.email(),
 });
 
 export type User = z.infer<typeof User>;
 
-export const UserResponse = User.extend({
-  id       : z.uuid(),
-  createdAt: z.iso.datetime(),
+export const UserWithPassword = User.extend({
+  password: z.string().min(6),
 });
 
-export type UserResponse = z.infer<typeof UserResponse>;
+export type UserWithPassword = z.infer<typeof UserWithPassword>;
+
+export const UserCreate = User.omit({ id: true }).extend({
+  password: z.string().min(6),
+});
+
+export type UserCreate = z.infer<typeof UserCreate>;
 
 export const UserDocs = {
   create: {
@@ -31,7 +37,7 @@ export const UserDocs = {
       summary: 'Buscar usuário por ID',
     },
     body: {
-      schema     : UserResponse,
+      schema     : User,
       status     : 200,
       description: 'Usuário encontrado',
     },
@@ -47,7 +53,7 @@ export const UserDocs = {
       summary: 'Listar todos os usuários',
     },
     body: {
-      schema     : UserResponse,
+      schema     : User,
       status     : 200,
       description: 'Lista de usuários retornada com sucesso',
     },

@@ -2,9 +2,6 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-echo "Installing dependencies..."
-npm install
-
 echo "Installing shared dependencies..."
 cd $SCRIPT_DIR/../shared && npm install && npm run build
 

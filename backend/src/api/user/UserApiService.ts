@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '@/modules/user';
-import { User } from '@/schemas';
+import { UserCreate } from '@/schemas';
 
 @Injectable()
 export class UserApiService {
   constructor(private readonly userService: UserService) {}
 
-  async create(data: User) {
+  async create(data: UserCreate) {
     return this.userService.create(data);
   }
 
