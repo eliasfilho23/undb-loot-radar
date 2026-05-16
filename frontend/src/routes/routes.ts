@@ -2,8 +2,8 @@ import { lazy } from 'react';
 import type { LazyExoticComponent, FC } from 'react';
 
 type Route = {
-  key: string
-  path: string
+  key      : string
+  path     : string
   component: LazyExoticComponent<FC>
 }
 
@@ -28,6 +28,9 @@ export const routes: Route[] = [
     path     : '/confirmar-email',
     component: lazy(() => import('@/features/auth/ConfirmEmailPage')),
   },
+];
+
+export const privateRoutes: Route[] = [
   {
     key      : 'claims',
     path     : '/meus-resgates',

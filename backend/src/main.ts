@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggerService } from '@/logger';
 import { BadRequestInterceptor, LoggingInterceptor, UnknownErrorInterceptor } from '@/interceptors';
@@ -7,6 +8,7 @@ import { BadRequestInterceptor, LoggingInterceptor, UnknownErrorInterceptor } fr
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useLogger(app.get(LoggerService));
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('LootRadar API')

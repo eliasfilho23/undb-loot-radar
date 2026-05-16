@@ -4,19 +4,21 @@ import { client } from '../../client';
 
 export type CreateUserPayload = {
   username: string;
-  email: string;
+  email   : string;
+  password: string;
 };
 
 export type CreatedUser = {
-  id: string;
+  id      : string;
   username: string;
-  email: string;
+  email   : string;
 };
 
 export async function createUser(overrides: Partial<CreateUserPayload> = {}) {
   const payload: CreateUserPayload = {
     username: faker.internet.userName().slice(0, 20),
     email   : faker.internet.email(),
+    password: faker.internet.password({ length: 10 }),
     ...overrides,
   };
 
